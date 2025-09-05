@@ -1,25 +1,27 @@
 import { animais } from "../animais.js";
 
-export class AbrigoAnimais {
 
+export class AbrigoAnimais {
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
     try {
       const listaAnimais = ordemAnimais.split(',');
       const animalInvalido = listaAnimais.find(animal => !animais[animal]);
+      const animalDuplicado = new Set(listaAnimais).size !== listaAnimais.length;
       
-      if(animalInvalido) {
+      if(animalInvalido || animalDuplicado) {
         return { erro: 'Animal inválido' };
       }
     } catch (error) {
-      return { erro: error.message}
+      
+      return { erro: 'Ocorreu um erro inesperado no processamento.' };
     }
+  }
 }
-}
-
 
 
 //export { AbrigoAnimais as AbrigoAnimais };
 
-const resultadoTeste = new AbrigoAnimais().encontraPessoas('RATO,BOLA', 'RATO,NOVELO', 'Lulu');
+// Linha para teste rápido durante o desenvolvimento
+const resultadoTeste = new AbrigoAnimais().encontraPessoas('RATO,BOLA', 'RATO,NOVELO', 'Bola,Loco,Rex,Tobi');
 console.log('Resultado do teste rápido:', resultadoTeste);
 
