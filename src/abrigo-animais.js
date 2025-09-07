@@ -1,5 +1,5 @@
 import { animais } from "../animais.js";
-import { arraysIguaisENaOrdem } from "../utilitarios.js";
+import { arraysIguaisENaOrdem, adotouMaisDeTres } from "../utilitarios.js";
 
 
 export class AbrigoAnimais {
@@ -36,7 +36,8 @@ export class AbrigoAnimais {
       const animaisAdotadosPessoa2 = [];
       const nomeGatos1 = [];
       const nomeGatos2 = [];
-
+      console.log(animaisAdotadosPessoa1);
+      console.log(animaisAdotadosPessoa2);
       for(const nomeAnimal of listaAnimais){
         const brinquedosFavoritos = animais[nomeAnimal].brinquedos;
         const especieAnimal = animais[nomeAnimal].especie;
@@ -66,14 +67,24 @@ export class AbrigoAnimais {
               } 
             
             }
+            if(adotouMaisDeTres(animaisAdotadosPessoa1)){
+              resultadoFinal.push(`${nomeAnimal} - pessoa - 1 não é permitido adotar mais de 3 animais`);
+              return;
+            }
             if(animaisAdotadosPessoa1.length < 1){
-            resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
-            animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+              animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});  
+              resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
+            
             }
 
           }else if(animais[nomeAnimal].especie !== 'gato'){
-            resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
+            if(adotouMaisDeTres(animaisAdotadosPessoa1)){
+              resultadoFinal.push(`${nomeAnimal} - pessoa - 1 não é permitido adotar mais de 3 animais`);
+              return;
+            }
             animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+            resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
+            
             }          
       
         }
@@ -93,20 +104,28 @@ export class AbrigoAnimais {
               continue;
             }
             
-          }
+          } 
+            console.log(adotouMaisDeTres(animaisAdotadosPessoa2));
+            if(adotouMaisDeTres(animaisAdotadosPessoa2)){
+              resultadoFinal.push(`${nomeAnimal} - pessoa - 2 não é permitido adotar mais de 3 animais`);
+              return;
+            }
             if(animaisAdotadosPessoa2.length < 1){  
-              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
               animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
+             
             }
             
          
           }else if(animais[nomeAnimal].especie !== 'gato'){
+            animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
             resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
           } 
         }
       continue;  
     
       }
+      
         return { lista: resultadoFinal.sort() };
     }catch (error) {
       return { erro: 'Ocorreu um erro inesperado no processamento.' };
@@ -120,7 +139,7 @@ export class AbrigoAnimais {
 // Linha para teste rápido durante o desenvolvimento
 
 const resultadoTeste = new AbrigoAnimais().encontraPessoas('BOLA,LASER',
-      'BOLA,NOVELO,RATO,LASER', 'Mimi,Fofo,Rex,Bola');
+      'LASER,SKATE,RATO,BOLA,CAIXA,NOVELO', 'Rex,Bola,Bebe,Loco');
 console.log('Resultado do teste rápido:', resultadoTeste);
 
 

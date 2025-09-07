@@ -4,6 +4,7 @@
  * @param {Array<string>} brinquedosPessoa A lista dos brinquedos oferecidos pela pessoa. 
  * @returns {boolean} Verdadeiro se o array com os brinquedos da pessoa estiverem com conteúdo e ordem corretos.
  */
+import { animais } from "../animais.js";
 
 function arraysIguaisENaOrdem(brinquedosAnimal, brinquedosPessoa) {
     let indiceAnimal = 0;
@@ -20,6 +21,20 @@ function arraysIguaisENaOrdem(brinquedosAnimal, brinquedosPessoa) {
     return false;
 }
 
+function adotouMaisDeTres(quantidadeAdotada){
+    if(quantidadeAdotada.length >= 3){
+        return true;
+
+    }
+    return false;
+}
+
+
+
 export { 
-    arraysIguaisENaOrdem 
+    arraysIguaisENaOrdem,
+    adotouMaisDeTres
+    
+
+ 
 }
