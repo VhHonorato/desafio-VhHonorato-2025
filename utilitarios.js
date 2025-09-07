@@ -4,7 +4,7 @@
  * @param {Array<string>} brinquedosPessoa A lista dos brinquedos oferecidos pela pessoa. 
  * @returns {boolean} Verdadeiro se o array com os brinquedos da pessoa estiverem com conteúdo e ordem corretos.
  */
-import { animais } from "../animais.js";
+import { animais } from "./animais.js";
 
 function arraysIguaisENaOrdem(brinquedosAnimal, brinquedosPessoa) {
     let indiceAnimal = 0;
@@ -29,12 +29,22 @@ function adotouMaisDeTres(quantidadeAdotada){
     return false;
 }
 
-
+function podeAdotarGato(nomeAnimal, animaisAdotadosPessoa){
+    const brinquedoGatoAtual = new Set(animais[nomeAnimal].brinquedos);
+    for(const animal of animaisAdotadosPessoa){
+        const brinquedoAnimalAdotado = new Set(animais[animal.nome].brinquedos);
+        const compartilhaBrinquedo = brinquedoAnimalAdotado.some(brinquedo =>brinquedoGatoAtual.has(brinquedo));
+        if(compartilhaBrinquedo){
+            return false;
+        }
+    
+    }
+    return true;
+}
 
 export { 
     arraysIguaisENaOrdem,
-    adotouMaisDeTres
-    
-
+    adotouMaisDeTres,
+    podeAdotarGato  
  
 }

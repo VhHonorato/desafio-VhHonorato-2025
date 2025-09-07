@@ -1,5 +1,5 @@
 import { animais } from "../animais.js";
-import { arraysIguaisENaOrdem, adotouMaisDeTres } from "../utilitarios.js";
+import { arraysIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato } from "../utilitarios.js";
 
 
 export class AbrigoAnimais {
@@ -34,8 +34,7 @@ export class AbrigoAnimais {
       const resultadoFinal = [];
       const animaisAdotadosPessoa1 = [];
       const animaisAdotadosPessoa2 = [];
-      const nomeGatos1 = [];
-      const nomeGatos2 = [];
+    
       console.log(animaisAdotadosPessoa1);
       console.log(animaisAdotadosPessoa2);
       for(const nomeAnimal of listaAnimais){
@@ -52,77 +51,60 @@ export class AbrigoAnimais {
            continue;
         }
         if(pessoaApta1){
-          
-          if(animais[nomeAnimal].especie === 'gato'){
-            nomeGatos1.push(nomeAnimal);
             //Regra 3 - Se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
-            for(let i=0; i<animaisAdotadosPessoa1.length; i++){
-              const brinquedoIgual = animais[animaisAdotadosPessoa1[i].nome].brinquedos.find(brinquedo => animais[nomeGatos1[0]].brinquedos.includes(brinquedo));
-              if(animaisAdotadosPessoa1.length >= 1){ 
-                if(brinquedoIgual){
-                resultadoFinal.push(`${nomeAnimal} - abrigo`);
-                
-                } 
-              continue;
-              } 
+            // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
+          if(especieAnimal === 'gato'){
+          
+            if (!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1) || adotouMaisDeTres(animaisAdotadosPessoa1)){
+              resultadoFinal.push(`${nomeAnimal} - abrigo`);
             
+            } else{
+              animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: especieAnimal});
+              resultadoFinal.push(`${nomeAnimal} - pessoa 1}`);
+              
             }
+           
+          } else {
             if(adotouMaisDeTres(animaisAdotadosPessoa1)){
-              resultadoFinal.push(`${nomeAnimal} - pessoa - 1 não é permitido adotar mais de 3 animais`);
-              return;
-            }
-            if(animaisAdotadosPessoa1.length < 1){
-              animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});  
+              resultadoFinal.push(`${nomeAnimal} - abrigo`);
+              continue;
+              
+            } else {
+              animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
               resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
             
-            }
-
-          }else if(animais[nomeAnimal].especie !== 'gato'){
-            if(adotouMaisDeTres(animaisAdotadosPessoa1)){
-              resultadoFinal.push(`${nomeAnimal} - pessoa - 1 não é permitido adotar mais de 3 animais`);
-              return;
-            }
-            animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
-            resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
-            
             }          
-      
+            
+          } 
+          continue;
         }
 
         if(pessoaApta2){
-          
+           // Atendendo a regra 3, se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
+            // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
           if(animais[nomeAnimal].especie === 'gato'){ 
-            nomeGatos2.push(nomeAnimal);
-            // Atendendo a regra 3, se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
-            
-              if(animaisAdotadosPessoa2.length >= 1){
-            for(let i=0; i<animaisAdotadosPessoa2.length; i++){
-              const brinquedoIgual = animais[animaisAdotadosPessoa2[i].nome].brinquedos.find(brinquedo => animais[nomeGatos2[0]].brinquedos.includes(brinquedo));
-              if(brinquedoIgual){
-                resultadoFinal.push(`${nomeAnimal} - abrigo`);
-              }
-              continue;
-            }
-            
-          } 
-            console.log(adotouMaisDeTres(animaisAdotadosPessoa2));
-            if(adotouMaisDeTres(animaisAdotadosPessoa2)){
-              resultadoFinal.push(`${nomeAnimal} - pessoa - 2 não é permitido adotar mais de 3 animais`);
-              return;
-            }
-            if(animaisAdotadosPessoa2.length < 1){  
-              animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
-              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
-             
-            }
-            
+           
+            if(!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa2) || adotouMaisDeTres(animaisAdotadosPessoa2)){
+              resultadoFinal.push(`${nomeAnimal} - abrigo`);
+              
+            } else {
+              animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: especieAnimal});
+              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);  
          
-          }else if(animais[nomeAnimal].especie !== 'gato'){
-            animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
-            resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
-          } 
+            }
+         } else {
+            if(adotouMaisDeTres(animaisAdotadosPessoa2)){
+              resultadoFinal.push(`${nomeAnimal} - abrigo`);
+              
+            } else {
+              animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: especieAnimal});
+              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
+            
+            }
+          }
+          continue;
         }
-      continue;  
+        
     
       }
       
