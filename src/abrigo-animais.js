@@ -1,5 +1,5 @@
 import { animais } from "../animais.js";
-import { arraysIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato } from "../utilitarios.js";
+import { brinquedosIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato, podeAdotarLoco } from "../utilitarios.js";
 
 
 export class AbrigoAnimais {
@@ -34,82 +34,109 @@ export class AbrigoAnimais {
       const resultadoFinal = [];
       const animaisAdotadosPessoa1 = [];
       const animaisAdotadosPessoa2 = [];
-    
-      console.log(animaisAdotadosPessoa1);
-      console.log(animaisAdotadosPessoa2);
+  
       for(const nomeAnimal of listaAnimais){
         const brinquedosFavoritos = animais[nomeAnimal].brinquedos;
         const especieAnimal = animais[nomeAnimal].especie;
 
-        const pessoaApta1 = arraysIguaisENaOrdem(brinquedosFavoritos, listaBrinquedosPessoa1);
-        const pessoaApta2 = arraysIguaisENaOrdem(brinquedosFavoritos, listaBrinquedosPessoa2);
+        //Regra 1 e 2 - Valida se os brinquedos são os favoritos e estão na ordem, mesmo que intercalados com outros brinquedos.
+        const pessoaApta1 = brinquedosIguaisENaOrdem(brinquedosFavoritos, listaBrinquedosPessoa1);
+        const pessoaApta2 = brinquedosIguaisENaOrdem(brinquedosFavoritos, listaBrinquedosPessoa2);
+        //Regra 6 - Valida as regras para adotar Loco.
+        const pessoa1AdotaLoco = podeAdotarLoco(nomeAnimal, animaisAdotadosPessoa1, brinquedosFavoritos, listaBrinquedosPessoa1);
+        const pessoa2AdotaLoco = podeAdotarLoco(nomeAnimal, animaisAdotadosPessoa2, brinquedosFavoritos, listaBrinquedosPessoa2);
 
         //Regra 4 - No caso de as duas pessoas serem aptas a adoção. E atende tambem a condição de as duas !aptas.
-        if(pessoaApta1 === pessoaApta2){
+        if(pessoaApta1 && pessoaApta2){
            resultadoFinal.push(`${nomeAnimal} - abrigo`)
          
            continue;
         }
-        if(pessoaApta1){
+        if(pessoaApta1 || pessoa1AdotaLoco){
             //Regra 3 - Se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
             // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
           if(especieAnimal === 'gato'){
           
             if (!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1) || adotouMaisDeTres(animaisAdotadosPessoa1)){
               resultadoFinal.push(`${nomeAnimal} - abrigo`);
+              continue;
             
             } else{
               animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: especieAnimal});
               resultadoFinal.push(`${nomeAnimal} - pessoa 1}`);
+              continue;
               
             }
            
           } else {
-            if(adotouMaisDeTres(animaisAdotadosPessoa1)){
+              if(adotouMaisDeTres(animaisAdotadosPessoa1)){
               resultadoFinal.push(`${nomeAnimal} - abrigo`);
               continue;
-              
-            } else {
+             
+
+            // Regra 6   
+              } else if(pessoa1AdotaLoco) {
               animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
               resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
-            
-            }          
-            
-          } 
-          continue;
-        }
+              continue;
+              
 
-        if(pessoaApta2){
+              } else {
+                animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+                resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
+                continue;
+
+              }
+              
+            }           
+             
+        } 
+              
+
+        if(pessoaApta2 || pessoa2AdotaLoco){
            // Atendendo a regra 3, se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
             // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
           if(animais[nomeAnimal].especie === 'gato'){ 
            
             if(!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa2) || adotouMaisDeTres(animaisAdotadosPessoa2)){
               resultadoFinal.push(`${nomeAnimal} - abrigo`);
-              
-            } else {
-              animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: especieAnimal});
-              resultadoFinal.push(`${nomeAnimal} - pessoa 2`);  
-         
-            }
-         } else {
-            if(adotouMaisDeTres(animaisAdotadosPessoa2)){
-              resultadoFinal.push(`${nomeAnimal} - abrigo`);
+              continue;
               
             } else {
               animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: especieAnimal});
               resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
-            
+              continue;  
+         
             }
-          }
-          continue;
+          } else {
+              if(adotouMaisDeTres(animaisAdotadosPessoa2)){
+                resultadoFinal.push(`${nomeAnimal} - abrigo`);
+                continue;    
+              
+              } else if(pessoa2AdotaLoco) {
+                
+                  animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+                  resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
+                  continue;
+                               
+
+                } else {
+                  animaisAdotadosPessoa2.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
+                  resultadoFinal.push(`${nomeAnimal} - pessoa 2`);
+                  continue;
+              
+                }
+          }      
+          
         }
+          resultadoFinal.push(`${nomeAnimal} - abrigo`);
+          continue;
         
-    
-      }
+        }
       
-        return { lista: resultadoFinal.sort() };
-    }catch (error) {
+      return { lista: resultadoFinal.sort() };
+      
+    } catch (error) {
       return { erro: 'Ocorreu um erro inesperado no processamento.' };
     }
   }
@@ -121,7 +148,7 @@ export class AbrigoAnimais {
 // Linha para teste rápido durante o desenvolvimento
 
 const resultadoTeste = new AbrigoAnimais().encontraPessoas('BOLA,LASER',
-      'LASER,SKATE,RATO,BOLA,CAIXA,NOVELO', 'Rex,Bola,Bebe,Loco');
+      'LASER,RATO,SKATE,BOLA,CAIXA,NOVELO', 'Rex,Bola,Loco,Bebe');
 console.log('Resultado do teste rápido:', resultadoTeste);
 
 
