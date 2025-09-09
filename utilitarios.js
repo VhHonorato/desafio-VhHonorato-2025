@@ -72,12 +72,9 @@ function podeAdotarGato(nomeAnimal, animaisAdotadosPessoa, pessoaApta){
                 } else {
                      return true;
                 }
-                  
-            }
-          
+            }          
         }
     }
-    
    
 }
 
@@ -103,16 +100,13 @@ function podeAdotarLoco(nomeAnimal,animaisAdotadosPessoa, brinquedosAnimal, brin
         return true;
     }
 
-   
-    
-
 }
 
 /** 
- * Verifica se Loco pode ser adotado, checando se existe os brinquedos preferidos, independente da ordem, e se ele não vai ser adotado sozinho.
+ * Verifica se existe conflito com os brinquedos favoritos do animal candidato a adoção, no caso de ja existir um gato adotado. 
  * @param {string} nomeAnimal O nome do animal a ser verificado.
  * @param {Array<Object>} animaisAdotadosPessoa A lista de animais já adotados.
- * @returns {boolean} 'true' se o array com os brinquedos da pessoa estiverem com conteúdo e ordem corretos.
+ * @returns {boolean} 'true' se não houver brinquedos favoritos do gato já adotado na lista dos brinquedos favoritos do animal candidato a adoçãp. E se não houver g
  */
 
 function podeAdotarComGato (nomeAnimal, animaisAdotadosPessoa){
@@ -125,9 +119,9 @@ function podeAdotarComGato (nomeAnimal, animaisAdotadosPessoa){
         } else {
             return true;
         }
+    } else {
+        return true;
     }
-
-    return false;
 }
 
 
