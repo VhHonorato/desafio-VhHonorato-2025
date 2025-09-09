@@ -2,7 +2,7 @@ import { animais } from "../animais.js";
 import { brinquedosIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato, podeAdotarLoco, podeAdotarComGato } from "../utilitarios.js";
 
 
-export class AbrigoAnimais {
+ class AbrigoAnimais {
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
     try {
       // --- VALIDAÇÃO DE ENTRADAS ---
@@ -147,7 +147,7 @@ export class AbrigoAnimais {
 }
 
 
-//export { AbrigoAnimais as AbrigoAnimais };
+export { AbrigoAnimais as AbrigoAnimais };
 
 // Linha para teste rápido durante o desenvolvimento
 
