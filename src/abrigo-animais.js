@@ -1,8 +1,8 @@
 import { animais } from "../animais.js";
-import { brinquedosIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato, podeAdotarLoco } from "../utilitarios.js";
+import { brinquedosIguaisENaOrdem, adotouMaisDeTres, podeAdotarGato, podeAdotarLoco, podeAdotarComGato } from "../utilitarios.js";
 
 
-export class AbrigoAnimais {
+ class AbrigoAnimais {
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
     try {
       // --- VALIDAÇÃO DE ENTRADAS ---
@@ -45,6 +45,7 @@ export class AbrigoAnimais {
         //Regra 6 - Valida as regras para adotar Loco.
         const pessoa1AdotaLoco = podeAdotarLoco(nomeAnimal, animaisAdotadosPessoa1, brinquedosFavoritos, listaBrinquedosPessoa1);
         const pessoa2AdotaLoco = podeAdotarLoco(nomeAnimal, animaisAdotadosPessoa2, brinquedosFavoritos, listaBrinquedosPessoa2);
+        
 
         //Regra 4 - No caso de as duas pessoas serem aptas a adoção. E atende tambem a condição de as duas !aptas.
         if(pessoaApta1 && pessoaApta2){
@@ -52,18 +53,18 @@ export class AbrigoAnimais {
          
            continue;
         }
-        if(pessoaApta1 || pessoa1AdotaLoco){
+        if(pessoaApta1 || pessoa1AdotaLoco || podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1, pessoaApta1)){
             //Regra 3 - Se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
             // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
           if(especieAnimal === 'gato'){
           
-            if (!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1) || adotouMaisDeTres(animaisAdotadosPessoa1)){
+            if (!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1, pessoaApta1) || adotouMaisDeTres(animaisAdotadosPessoa1)){
               resultadoFinal.push(`${nomeAnimal} - abrigo`);
               continue;
             
             } else{
               animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: especieAnimal});
-              resultadoFinal.push(`${nomeAnimal} - pessoa 1}`);
+              resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
               continue;
               
             }
@@ -75,17 +76,20 @@ export class AbrigoAnimais {
              
 
             // Regra 6   
-              } else if(pessoa1AdotaLoco) {
+              } else if(pessoa1AdotaLoco && podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1, pessoaApta1)) {
               animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
               resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
               continue;
               
 
-              } else {
+              } else if(podeAdotarGato(nomeAnimal, animaisAdotadosPessoa1, pessoaApta1)){
                 animaisAdotadosPessoa1.push({nome: nomeAnimal, especie: animais[nomeAnimal].especie});
                 resultadoFinal.push(`${nomeAnimal} - pessoa 1`);
                 continue;
 
+              } else{
+                resultadoFinal.push(`${nomeAnimal} - abrigo`);
+                continue;
               }
               
             }           
@@ -93,12 +97,12 @@ export class AbrigoAnimais {
         } 
               
 
-        if(pessoaApta2 || pessoa2AdotaLoco){
+        if(pessoaApta2 || pessoa2AdotaLoco || podeAdotarGato(nomeAnimal, animaisAdotadosPessoa2, pessoaApta2)){
            // Atendendo a regra 3, se já houver um animal adotado com pelo menos um dos brinquedos favoritos iguais ao do gato em questão, os dois não poderão ser adotados pela mesma pessoa e prevalce quem foi escolhido primeiro.
             // Regra 5 - Uma pessoa não pode adotar mais de 3 animais.
           if(animais[nomeAnimal].especie === 'gato'){ 
            
-            if(!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa2) || adotouMaisDeTres(animaisAdotadosPessoa2)){
+            if(!podeAdotarGato(nomeAnimal, animaisAdotadosPessoa2, pessoaApta2) || adotouMaisDeTres(animaisAdotadosPessoa2)){
               resultadoFinal.push(`${nomeAnimal} - abrigo`);
               continue;
               
@@ -143,12 +147,13 @@ export class AbrigoAnimais {
 }
 
 
-//export { AbrigoAnimais as AbrigoAnimais };
+export { AbrigoAnimais as AbrigoAnimais };
 
 // Linha para teste rápido durante o desenvolvimento
 
-const resultadoTeste = new AbrigoAnimais().encontraPessoas('BOLA,LASER',
-      'LASER,RATO,SKATE,BOLA,CAIXA,NOVELO', 'Rex,Bola,Loco,Bebe');
+const resultadoTeste = new AbrigoAnimais().encontraPessoas('RATO,BOLA',
+      'RATO,NOVELO', 
+      'Rex,Fofo');
 console.log('Resultado do teste rápido:', resultadoTeste);
 
 

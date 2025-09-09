@@ -12,6 +12,36 @@ describe('Abrigo de Animais', () => {
     expect(resultado.lista).toBeFalsy();
   });
 
+   test('Deve rejeitar brinquedos inválidos', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      'OSSO,RATO', 
+      'RATO,BOLA', 
+      'Rex,Fofo'
+    );
+    expect(resultado.erro).toBe('Brinquedo inválido');
+    expect(resultado.lista).toBeFalsy();
+  });
+
+   test('Deve rejeitar animal duplicado', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      'CAIXA,RATO', 
+      'RATO,BOLA', 
+      'Mimi,Mimi'
+    );
+    expect(resultado.erro).toBe('Animal inválido');
+    expect(resultado.lista).toBeFalsy();
+  });
+
+     test('Deve rejeitar brinquedo duplicado', () => {
+    const resultado = new AbrigoAnimais().encontraPessoas(
+      'CAIXA,RATO', 
+      'BOLA,BOLA', 
+      'Mimi,Rex'
+    );
+    expect(resultado.erro).toBe('Brinquedo inválido');
+    expect(resultado.lista).toBeFalsy();
+  });
+
   test('Deve encontrar pessoa para um animal', () => {
     const resultado = new AbrigoAnimais().encontraPessoas(
       'RATO,BOLA',
